@@ -1,66 +1,106 @@
 [
   {
-    "NOME": "Ana",
-    "SOBRENOME": "Ferreira",
-    "PROJETO": "Organizadores",
-    "LINKEDIN": "https://linkedin.com/in/ana-ferreira",
-    "GITHUB": "https://github.com/anaferreira",
-    "URL_FOTO": "https://i.pravatar.cc/300?img=47"
-  },
-  {
     "NOME": "Camila",
-    "SOBRENOME": "Rocha",
-    "PROJETO": "Organizadores",
-    "LINKEDIN": "https://linkedin.com/in/camila-rocha",
-    "GITHUB": "https://github.com/camilarocha",
-    "URL_FOTO": "https://i.pravatar.cc/300?img=44"
-  },
-  {
-    "NOME": "Rafael",
-    "SOBRENOME": "Almeida",
-    "PROJETO": "Organizadores",
-    "LINKEDIN": "https://linkedin.com/in/rafael-almeida",
-    "GITHUB": "https://github.com/rafaelalmeida",
-    "URL_FOTO": "https://i.pravatar.cc/300?img=12"
-  },
-  {
-    "NOME": "Lucas",
-    "SOBRENOME": "Martins",
-    "PROJETO": "Organizadores",
-    "LINKEDIN": "https://linkedin.com/in/lucas-martins",
-    "GITHUB": "https://github.com/lucasmartins",
-    "URL_FOTO": "https://i.pravatar.cc/300?img=13"
+    "SOBRENOME": "Menezes",
+    "PROJETO": "SlanGO",
+    "LINKEDIN": "https://www.linkedin.com/in/camila-menezess?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+    "GITHUB": "https://github.com/meunomeecamila",
+    "URL_FOTO": "../assets/fotos/Camila.JPG"
   },
   {
     "NOME": "Eduardo",
+    "SOBRENOME": "Borges",
+    "PROJETO": "SlanGO",
+    "LINKEDIN": "https://www.linkedin.com/in/eduardobssysla/",
+    "GITHUB": "https://github.com/EduardoBO4",
+    "URL_FOTO": "../assets/fotos/Eduardo.JPG"
+  },
+  {
+    "NOME": "Gabriel",
+    "SOBRENOME": "Ferreira",
+    "PROJETO": "DronesPharms",
+    "LINKEDIN": "https://www.linkedin.com/in/gabriel-ferreira-2587a22b3",
+    "GITHUB": "https://github.com/Ferreira502",
+    "URL_FOTO": "../assets/fotos/Gabriel Ferreira.JPG"
+  },
+  {
+    "NOME": "Gabriel",
     "SOBRENOME": "Nogueira",
-    "PROJETO": "Projeto X",
-    "LINKEDIN": "https://linkedin.com/in/eduardo-nogueira",
-    "GITHUB": "https://github.com/eduardonogueira",
-    "URL_FOTO": "https://i.pravatar.cc/300?img=53"
+    "PROJETO": "BusMob",
+    "LINKEDIN": "https://www.linkedin.com/in/gabriel-nogueira-145478323",
+    "GITHUB": "https://github.com/GabrielMatosNogueira",
+    "URL_FOTO": "../assets/fotos/Gabriel Nogueira.JPG"
   },
   {
-    "NOME": "Fatima",
-    "SOBRENOME": "Hassan",
-    "PROJETO": "Projeto X",
-    "LINKEDIN": "https://linkedin.com/in/fatima-hassan",
-    "GITHUB": "https://github.com/fatimahassan",
-    "URL_FOTO": "https://i.pravatar.cc/300?img=32"
+    "NOME": "Gustavo",
+    "SOBRENOME": "Lopes",
+    "PROJETO": "BusMob",
+    "LINKEDIN": "https://www.linkedin.com/in/gustavo-lopes-oliveira/",
+    "GITHUB": "https://github.com/GustavoLopesOliveira",
+    "URL_FOTO": "../assets/fotos/Gustavo.JPG"
   },
   {
-    "NOME": "Igor",
-    "SOBRENOME": "Barbosa",
-    "PROJETO": "Projeto X",
-    "LINKEDIN": "https://linkedin.com/in/igor-barbosa",
-    "GITHUB": "https://github.com/igorbarbosa",
-    "URL_FOTO": "https://i.pravatar.cc/300?img=15"
+    "NOME": "Hayala",
+    "SOBRENOME": "",
+    "PROJETO": "Mestrado",
+    "LINKEDIN": "https://www.linkedin.com/in/hayala?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+    "GITHUB": "https://github.com/hayalacurto",
+    "URL_FOTO": "../assets/fotos/Hayala.JPG"
   },
   {
-    "NOME": "Juliana",
-    "SOBRENOME": "Castro",
-    "PROJETO": "Projeto X",
-    "LINKEDIN": "https://linkedin.com/in/juliana-castro",
-    "GITHUB": "https://github.com/julianacastro",
-    "URL_FOTO": "https://i.pravatar.cc/300?img=48"
+    "NOME": "Humberto",
+    "SOBRENOME": "Marques",
+    "PROJETO": "Coordenador",
+    "LINKEDIN": "https://www.linkedin.com/in/humbertotmarques?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+    "GITHUB": "https://www.escavador.com/sobre/6559501/humberto-torres-marques-neto",
+    "URL_FOTO": "../assets/fotos/Humberto.JPG"
+  },
+  {
+    "NOME": "Izabel",
+    "SOBRENOME": "Chaves",
+    "PROJETO": "PatronusNet",
+    "LINKEDIN": "https://www.linkedin.com/in/izabel-chaves-034832284/",
+    "GITHUB": "https://github.com/rainbowcrack",
+    "URL_FOTO": "../assets/fotos/Izabel.JPG"
+  },
+  {
+    "NOME": "Mariana",
+    "SOBRENOME": "Temporim",
+    "PROJETO": "SlanGO",
+    "LINKEDIN": "https://www.linkedin.com/in/mariana-temporim?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+    "GITHUB": "https://github.com/maritemporim",
+    "URL_FOTO": "../assets/fotos/Mariana.JPG"
+  },
+  {
+    "NOME": "Pedro",
+    "SOBRENOME": "Félix",
+    "PROJETO": "BrowserKids",
+    "LINKEDIN": "https://www.linkedin.com/in/pedrofelixdeveloper/",
+    "GITHUB": "https://github.com/Pedro-HFelix",
+    "URL_FOTO": "../assets/fotos/Pedro Santos.JPG"
+  },
+  {
+    "NOME": "Pedro Henrique",
+    "SOBRENOME": "Cardoso",
+    "PROJETO": "DronesPharms",
+    "LINKEDIN": "https://www.linkedin.com/in/pedro-maia-a930a8267/",
+    "GITHUB": "https://github.com/pedro-maia1337",
+    "URL_FOTO": "../assets/fotos/Pedro.JPG"
+  },
+  {
+    "NOME": "Thiago",
+    "SOBRENOME": "Costa",
+    "PROJETO": "Youtube Communities",
+    "LINKEDIN": "https://www.linkedin.com/in/thiagoamadocosta/",
+    "GITHUB": "https://github.com/ThiiagoAC7",
+    "URL_FOTO": "../assets/fotos/Tiago.JPG"
+  },
+  {
+    "NOME": "Matheus",
+    "SOBRENOME": "Coxir",
+    "PROJETO": "PatronusNet",
+    "LINKEDIN": "https://www.linkedin.com/in/matheus-silva-coxir/",
+    "GITHUB": "https://github.com/MatheusSCxr",
+    "URL_FOTO": "../assets/fotos/Tiago.JPG"
   }
 ]

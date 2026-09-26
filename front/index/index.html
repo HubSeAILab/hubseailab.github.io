@@ -45,6 +45,8 @@
   <script>
     const LARGURA_CARD = 260;
     const ESPACO = 25;
+    const LARGURA_ITEM = LARGURA_CARD + ESPACO; // espaço que cada card "ocupa" na fileira
+    const VELOCIDADE_PX_POR_SEG = 60; // ajuste aqui pra deixar mais rápido/lento
     const CHAVE_CACHE = 'hubse_noticias_cache';
 
     const secaoNoticias = document.getElementById('noticias-section');
@@ -53,22 +55,18 @@
 
     let noticiasValidas = [];
     let modoAtual = null; // 'estatico' | 'carrossel'
+    let repeticoesAtuais = 0;
 
     /* 3. Lifecycle e Cache */
     async function obterNoticias() {
-      let salvo = null;
-      try { salvo = sessionStorage.getItem(CHAVE_CACHE); } catch (_) {}
+      const salvo = sessionStorage.getItem(CHAVE_CACHE);
       if (salvo) {
-        try {
-          const dadosCache = JSON.parse(salvo);
-          if (Array.isArray(dadosCache)) return dadosCache;
-        } catch (_) {}
-        try { sessionStorage.removeItem(CHAVE_CACHE); } catch (_) {}
+        try { return JSON.parse(salvo); } catch (_) { sessionStorage.removeItem(CHAVE_CACHE); }
       }
       const resp = await fetch('noticias.json', { cache: 'no-cache' });
       if (!resp.ok) throw new Error(`Status ${resp.status}`);
       const dados = await resp.json();
-      try { sessionStorage.setItem(CHAVE_CACHE, JSON.stringify(dados)); } catch (_) {}
+      sessionStorage.setItem(CHAVE_CACHE, JSON.stringify(dados));
       return dados;
     }
 
@@ -76,26 +74,14 @@
     function filtrarValidas(lista) {
       const agora = new Date();
       return (lista || [])
-        .filter(n => {
-          if (!n.data_vencimento) return true;
-
-          const dataLimite = /^\d{4}-\d{2}-\d{2}$/.test(n.data_vencimento)
-            ? new Date(`${n.data_vencimento}T23:59:59`)
-            : new Date(n.data_vencimento);
-          return !Number.isNaN(dataLimite.getTime()) && dataLimite >= agora;
-        })
+        .filter(n => !n.data_vencimento || new Date(n.data_vencimento) >= agora)
         .sort((a, b) => new Date(b.data_lancamento || 0) - new Date(a.data_lancamento || 0));
     }
 
-    /* 1. Cálculo Dinâmico de Capacidade Visível */
+    /* Capacidade visível (usada só pra decidir estático vs carrossel) */
     function calcularCapacidadeVisivel() {
-      const estilos = getComputedStyle(secaoNoticias);
-      const padding = parseFloat(estilos.paddingLeft) + parseFloat(estilos.paddingRight);
-      const larguraDisponivel = Math.max(0, secaoNoticias.clientWidth - padding);
-      const larguraCard = parseFloat(estilos.getPropertyValue('--noticia-card-width')) || LARGURA_CARD;
-      const espaco = parseFloat(estilos.getPropertyValue('--noticia-gap')) || ESPACO;
-
-      return Math.max(1, Math.floor((larguraDisponivel + espaco) / (larguraCard + espaco)));
+      const largura = secaoNoticias.clientWidth || window.innerWidth;
+      return Math.max(1, Math.floor((largura + ESPACO) / (LARGURA_CARD + ESPACO)));
     }
 
     function criarCard(item) {
@@ -125,21 +111,7 @@
       return a;
     }
 
-    function atualizarDistanciaCarrossel() {
-      if (!container.classList.contains('noticias-carrossel')) return;
-
-      const primeiroCardDuplicado = container.children[noticiasValidas.length];
-      if (!container.children.length || !primeiroCardDuplicado) return;
-
-      const primeiroCard = container.children[0];
-      const distancia = primeiroCardDuplicado.getBoundingClientRect().left - primeiroCard.getBoundingClientRect().left;
-      container.style.setProperty('--carrossel-distancia', `-${distancia}px`);
-      container.style.setProperty('--carrossel-duracao', `${Math.max(12, distancia / 55)}s`);
-    }
-
-    /* 1 & 2. Renderização */
     function renderizar() {
-      // 0 notícias válidas: esconde o carrossel e mostra a imagem fallback
       if (noticiasValidas.length === 0) {
         secaoNoticias.hidden = true;
         fallbackHumberto.hidden = false;
@@ -148,33 +120,52 @@
         return;
       }
 
-      // Notícias válidas existem: esconde fallback e exibe seção
       fallbackHumberto.hidden = true;
       fallbackHumberto.setAttribute('aria-hidden', 'true');
       secaoNoticias.hidden = false;
 
+      const larguraVisivel = secaoNoticias.clientWidth || window.innerWidth;
       const capacidade = calcularCapacidadeVisivel();
       const novoModo = noticiasValidas.length > capacidade ? 'carrossel' : 'estatico';
 
-      if (novoModo === modoAtual && container.children.length > 0) {
-        atualizarDistanciaCarrossel();
+      if (novoModo === 'estatico') {
+        if (novoModo === modoAtual && container.children.length === noticiasValidas.length) return;
+        modoAtual = novoModo;
+        repeticoesAtuais = 0;
+        container.className = 'noticias-container noticias-estaticas';
+        container.style.animation = 'none';
+        container.style.removeProperty('--largura-set');
+        container.style.removeProperty('--duracao-carrossel');
+        container.replaceChildren();
+        noticiasValidas.forEach(n => container.appendChild(criarCard(n)));
         return;
       }
+
+      // Modo carrossel: largura de UM conjunto completo de notícias
+      const larguraSet = noticiasValidas.length * LARGURA_ITEM;
+
+      // Repetições suficientes pra nunca faltar conteúdo na tela,
+      // mesmo em monitores bem largos (evita o "buraco")
+      const repeticoesNecessarias = Math.max(2, Math.ceil(larguraVisivel / larguraSet) + 1);
+
+      if (novoModo === modoAtual && repeticoesNecessarias === repeticoesAtuais) return;
+
       modoAtual = novoModo;
+      repeticoesAtuais = repeticoesNecessarias;
 
-      // Limpa cards antigos para evitar duplicidade ao redimensionar ou voltar de página
+      container.className = 'noticias-container noticias-carrossel';
       container.replaceChildren();
-
-      if (novoModo === 'carrossel') {
-        container.className = 'noticias-container noticias-carrossel';
-        // Duplica para rotação contínua 360° sem salto
-        [...noticiasValidas, ...noticiasValidas].forEach(n => container.appendChild(criarCard(n)));
-      } else {
-        container.className = 'noticias-container noticias-estaticas';
+      for (let i = 0; i < repeticoesNecessarias; i++) {
         noticiasValidas.forEach(n => container.appendChild(criarCard(n)));
       }
 
-      atualizarDistanciaCarrossel();
+      // Reinicia a animação do zero pra não "pular" ao recalcular repetições
+      container.style.animation = 'none';
+      container.style.setProperty('--largura-set', `${larguraSet}px`);
+      const duracao = larguraSet / VELOCIDADE_PX_POR_SEG;
+      container.style.setProperty('--duracao-carrossel', `${duracao}s`);
+      void container.offsetWidth; // força reflow antes de reativar
+      container.style.animation = '';
     }
 
     async function iniciar() {
@@ -188,16 +179,15 @@
       renderizar();
     }
 
-    // Mede a área que realmente contém os cards, incluindo mudanças de layout.
-    new ResizeObserver(() => {
-      if (noticiasValidas.length > 0) renderizar();
-    }).observe(secaoNoticias);
+    // Monitora redimensionamento de janela sem travar em breakpoints fixos
+    new ResizeObserver(() => renderizar()).observe(document.body);
 
-    // Revalida notícias expiradas ao restaurar a página pelo BFCache.
-    window.addEventListener('pageshow', (evento) => {
-      if (evento.persisted) {
+    // Garante restauração limpa ao voltar de página (bfcache)
+    window.addEventListener('pageshow', (ev) => {
+      if (ev.persisted) {
         modoAtual = null;
-        iniciar();
+        repeticoesAtuais = 0;
+        renderizar();
       }
     });
 

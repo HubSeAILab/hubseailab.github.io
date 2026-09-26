@@ -64,7 +64,7 @@ main {
   width: 100%;
   padding: 20px 40px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* antes era center — cortava o trilho */
   align-items: center;
   overflow: hidden;
   margin-bottom: 50px;
@@ -81,7 +81,7 @@ main {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -89,7 +89,7 @@ main {
 .noticias-carrossel {
   display: flex;
   width: max-content;
-  animation: rolarCarrossel 30s linear infinite;
+  animation: rolarCarrossel var(--duracao-carrossel, 30s) linear infinite;
   will-change: transform;
 }
 
@@ -143,7 +143,8 @@ main {
   color: #555555;
 }
 
+/* Move exatamente a largura de UM conjunto de notícias */
 @keyframes rolarCarrossel {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-1 * var(--largura-set, 0px))); }
 }

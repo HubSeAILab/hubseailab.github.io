@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>HUB-SE | Contato</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../assets/logos/logoempe.png" type="image/png">
   <link rel="stylesheet" href="contato.css">
   <link rel="stylesheet" href="../components/layout.css">
 </head>
@@ -14,25 +15,59 @@
 
   <main class="contato-main">
     <div class="contato-card">
-      <h1 class="contato-titulo">Entre em contato!</h1>
+      <h1 class="contato-titulo">
+        Entre em contato!
+      </h1>
 
-      <form id="form-contato" action="mailto:hubse.ailab@gmail.com" method="post" enctype="text/plain">
+      <form
+        id="form-contato"
+        action="mailto:hubse.ailab@gmail.com"
+        method="post"
+        enctype="text/plain"
+      >
         <div class="campo">
           <label for="nome">Nome</label>
-          <input id="nome" name="nome" type="text" maxlength="100" required placeholder="Seu nome completo">
+
+          <input
+            id="nome"
+            name="nome"
+            type="text"
+            maxlength="100"
+            required
+            placeholder="Seu nome completo"
+          >
         </div>
 
         <div class="campo">
           <label for="email">Email</label>
-          <input id="email" name="email" type="email" maxlength="255" required placeholder="seuemail@exemplo.com">
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            maxlength="255"
+            required
+            placeholder="seuemail@exemplo.com"
+          >
         </div>
 
         <div class="campo">
           <label for="mensagem">Mensagem</label>
-          <textarea id="mensagem" name="mensagem" rows="5" maxlength="1500" required placeholder="Como podemos te ajudar?"></textarea>
+
+          <textarea
+            id="mensagem"
+            name="mensagem"
+            rows="5"
+            maxlength="1500"
+            required
+            placeholder="Como podemos te ajudar?"
+          ></textarea>
         </div>
 
-        <button type="submit" class="btn-enviar">Enviar</button>
+        <button type="submit" class="btn-enviar">
+          Enviar
+        </button>
+
         <p id="feedback" class="feedback" hidden></p>
       </form>
     </div>
@@ -42,12 +77,14 @@
   <div id="site-footer"></div>
 
   <script src="../components/layout.js"></script>
+
   <script>
     const form = document.getElementById('form-contato');
     const feedback = document.getElementById('feedback');
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
@@ -57,13 +94,22 @@
       const email = form.email.value.trim();
       const msg = form.mensagem.value.trim();
 
-      const assunto = `[Contato HUB-SE] Mensagem de ${nome}`;
-      const corpo = `Nome: ${nome}\nEmail: ${email}\n\nMensagem:\n${msg}`;
+      const assunto =
+        `[Contato HUB-SE] Mensagem de ${nome}`;
 
-      window.location.href = `mailto:hubse.ailab@gmail.com?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+      const corpo =
+        `Nome: ${nome}\n` +
+        `Email: ${email}\n\n` +
+        `Mensagem:\n${msg}`;
+
+      window.location.href =
+        `mailto:hubse.ailab@gmail.com` +
+        `?subject=${encodeURIComponent(assunto)}` +
+        `&body=${encodeURIComponent(corpo)}`;
 
       feedback.hidden = false;
-      feedback.textContent = 'Abrindo seu aplicativo de e-mail...';
+      feedback.textContent =
+        'Abrindo seu aplicativo de e-mail...';
     });
   </script>
 </body>

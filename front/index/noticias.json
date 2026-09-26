@@ -86,21 +86,5 @@
     "link": "../projetos/projetos.html",
     "data_lancamento": "2026-09-20T00:00:00",
     "data_vencimento": "2026-12-31T00:00:00"
-  },
-  {
-    "titulo": "Projeto SlanGO lançado",
-    "descricao": "Novo aplicativo desenvolvido com Flutter e Node.js para gírias.",
-    "imagem": "../assets/logos/logodeitada.png",
-    "link": "../projetos/projetos.html",
-    "data_lancamento": "2026-09-20T00:00:00",
-    "data_vencimento": "2026-12-31T00:00:00"
-  },
-  {
-    "titulo": "Projeto SlanGO lançado",
-    "descricao": "Novo aplicativo desenvolvido com Flutter e Node.js para gírias.",
-    "imagem": "../assets/logos/logodeitada.png",
-    "link": "../projetos/projetos.html",
-    "data_lancamento": "2026-09-20T00:00:00",
-    "data_vencimento": "2026-12-31T00:00:00"
   }
 ]

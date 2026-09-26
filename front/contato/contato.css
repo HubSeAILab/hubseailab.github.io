@@ -1,0 +1,118 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  color: #1c2b2d;
+  background-image: radial-gradient(#bfbfbf 1px, transparent 1px);
+  background-size: 18px 18px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.contato-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px 100px;
+  width: 100%;
+}
+
+.contato-card {
+  width: 100%;
+  max-width: 540px;
+  background: #1c4d52;
+  color: #ffffff;
+  border-radius: 28px;
+  padding: 44px 40px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+}
+
+.contato-titulo {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  letter-spacing: -0.5px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.campo label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #e2f1f2;
+}
+
+.campo input,
+.campo textarea {
+  background: #f1f1f1;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font: inherit;
+  font-size: 15px;
+  color: #1c2b2d;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #6eb7bc;
+}
+
+.campo textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.btn-enviar {
+  display: block;
+  width: 160px;
+  margin: 12px auto 0;
+  background: #ffffff;
+  color: #1c4d52;
+  border: none;
+  border-radius: 40px;
+  padding: 13px 0;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-enviar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+.feedback {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 14px;
+  color: #d2f0f2;
+}
+
+@media (max-width: 600px) {
+  .contato-card {
+    padding: 30px 20px;
+    border-radius: 20px;
+  }
+  .contato-titulo {
+    font-size: 24px;
+  }
+}

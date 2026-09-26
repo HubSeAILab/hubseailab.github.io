@@ -4,113 +4,204 @@
   <meta charset="UTF-8">
   <title>HUB-SE | Início</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- O CSS está na mesma pasta, logo não precisa de ../ -->
   <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="../components/layout.css">
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="logo">
-      <img src="../assets/logos/logoempe.png" alt="HUB-SE" class="empe-logo">
-    </div>
+  <!-- Navbar Global Unificada -->
+  <div id="site-navbar" data-pagina="inicio"></div>
 
-    <nav class="nav-links">
-      <a href="../index.html" class="active">Início</a>
-      <a href="../sobre/sobre.html">Sobre</a>
-      <a href="../projetos/projetos.html">Projetos</a>
-      <a href="../equipes/equipe.html">Equipe</a>
-    </nav>
-
-    <button class="btn-contato">Contato</button>
-  </header>
-
-  <!-- CORPO PRINCIPAL -->
   <main>
-    <!-- HERO (Logo Grande) -->
+    <!-- Seção Hero: com trava inline de tamanho -->
     <section class="hero">
-      <img src="../assets/logos/logodeitada.png" alt="HUB-SE" class="hero-logo">
+      <img 
+        src="../assets/logos/logodeitada.png" 
+        alt="HUB-SE" 
+        class="hero-logo" 
+        style="max-width: 800px; width: 90%; height: auto; display: block;"
+      >
     </section>
 
-    <!-- CARROSSEL / NOTÍCIAS -->
-    <section class="noticias-section">
-      <!-- Fallback -->
-      <div id="fallback-vazio" class="fallback-vazio">
-        <img src="../assets/logos/logodeitada.png" alt="Sem notícias">
-      </div>
+    <!-- Critério 2: Imagem Humberto (Fallback caso o carrossel suma / 0 notícias) -->
+    <div id="fallback-humberto" class="fallback-humberto" hidden aria-hidden="true">
+      <img 
+        src="../assets/logos/logodeitada.png" 
+        alt="Destaque HUB-SE" 
+        style="max-width: 500px; width: 90%; height: auto; border-radius: 16px; opacity: 0.85;"
+      >
+    </div>
 
-      <!-- Container das Notícias -->
-      <div id="noticias-container" class="noticias-container">
-        <!-- JS injeta os cards aqui -->
-      </div>
+    <!-- Critério 1: Carrossel de Notícias -->
+    <section id="noticias-section" class="noticias-section" hidden>
+      <div id="noticias-container" class="noticias-container"></div>
     </section>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-overlay"></div>
-    <div class="footer-content">
-      <p>© 2026 HUB-SE</p>
-    </div>
-  </footer>
+  <!-- Footer Global Unificado -->
+  <div id="site-footer"></div>
 
-  <!-- SCRIPT -->
+  <script src="../components/layout.js"></script>
   <script>
-    async function carregarNoticias() {
-      const container = document.getElementById('noticias-container');
-      const fallback = document.getElementById('fallback-vazio');
+    const LARGURA_CARD = 260;
+    const ESPACO = 25;
+    const CHAVE_CACHE = 'hubse_noticias_cache';
 
-      try {
-        const resposta = await fetch('noticias.json');
-        const todasNoticias = await resposta.json();
+    const secaoNoticias = document.getElementById('noticias-section');
+    const container = document.getElementById('noticias-container');
+    const fallbackHumberto = document.getElementById('fallback-humberto');
 
-        const hoje = new Date();
-        let noticiasValidas = todasNoticias.filter(noticia => {
-          const vencimento = new Date(noticia.data_vencimento);
-          return vencimento >= hoje;
-        });
+    let noticiasValidas = [];
+    let modoAtual = null; // 'estatico' | 'carrossel'
 
-        if (noticiasValidas.length === 0) {
-          container.style.display = 'none';
-          fallback.style.display = 'block';
-          return;
-        }
-
-        noticiasValidas.sort((a, b) => new Date(b.data_lancamento) - new Date(a.data_lancamento));
-
-        if (noticiasValidas.length <= 4) {
-          container.className = 'noticias-container noticias-estaticas';
-        } else {
-          container.className = 'noticias-container noticias-carrossel';
-          noticiasValidas = [...noticiasValidas, ...noticiasValidas];
-        }
-
-        fallback.style.display = 'none';
-        container.style.display = 'flex';
-
-        noticiasValidas.forEach(noticia => {
-          const card = document.createElement('a');
-          card.href = noticia.link;
-          card.className = 'noticia-card';
-          card.innerHTML = `
-            <img src="${noticia.imagem}" alt="${noticia.titulo}" class="noticia-img">
-            <div class="noticia-conteudo">
-              <h3 class="noticia-titulo">${noticia.titulo}</h3>
-              <p class="noticia-descricao">${noticia.descricao}</p>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-
-      } catch (erro) {
-        console.error("Erro ao carregar notícias:", erro);
-        container.style.display = 'none';
-        fallback.style.display = 'block';
+    /* 3. Lifecycle e Cache */
+    async function obterNoticias() {
+      let salvo = null;
+      try { salvo = sessionStorage.getItem(CHAVE_CACHE); } catch (_) {}
+      if (salvo) {
+        try {
+          const dadosCache = JSON.parse(salvo);
+          if (Array.isArray(dadosCache)) return dadosCache;
+        } catch (_) {}
+        try { sessionStorage.removeItem(CHAVE_CACHE); } catch (_) {}
       }
+      const resp = await fetch('noticias.json', { cache: 'no-cache' });
+      if (!resp.ok) throw new Error(`Status ${resp.status}`);
+      const dados = await resp.json();
+      try { sessionStorage.setItem(CHAVE_CACHE, JSON.stringify(dados)); } catch (_) {}
+      return dados;
     }
 
-    carregarNoticias();
+    /* 1. Filtro de Validade */
+    function filtrarValidas(lista) {
+      const agora = new Date();
+      return (lista || [])
+        .filter(n => {
+          if (!n.data_vencimento) return true;
+
+          const dataLimite = /^\d{4}-\d{2}-\d{2}$/.test(n.data_vencimento)
+            ? new Date(`${n.data_vencimento}T23:59:59`)
+            : new Date(n.data_vencimento);
+          return !Number.isNaN(dataLimite.getTime()) && dataLimite >= agora;
+        })
+        .sort((a, b) => new Date(b.data_lancamento || 0) - new Date(a.data_lancamento || 0));
+    }
+
+    /* 1. Cálculo Dinâmico de Capacidade Visível */
+    function calcularCapacidadeVisivel() {
+      const estilos = getComputedStyle(secaoNoticias);
+      const padding = parseFloat(estilos.paddingLeft) + parseFloat(estilos.paddingRight);
+      const larguraDisponivel = Math.max(0, secaoNoticias.clientWidth - padding);
+      const larguraCard = parseFloat(estilos.getPropertyValue('--noticia-card-width')) || LARGURA_CARD;
+      const espaco = parseFloat(estilos.getPropertyValue('--noticia-gap')) || ESPACO;
+
+      return Math.max(1, Math.floor((larguraDisponivel + espaco) / (larguraCard + espaco)));
+    }
+
+    function criarCard(item) {
+      const a = document.createElement('a');
+      a.href = item.link || '#';
+      a.className = 'noticia-card';
+
+      const img = document.createElement('img');
+      img.src = item.imagem || '../assets/logos/logoempe.png';
+      img.alt = item.titulo || 'Notícia';
+      img.className = 'noticia-img';
+      img.loading = 'lazy';
+
+      const corpo = document.createElement('div');
+      corpo.className = 'noticia-conteudo';
+
+      const h3 = document.createElement('h3');
+      h3.className = 'noticia-titulo';
+      h3.textContent = item.titulo;
+
+      const p = document.createElement('p');
+      p.className = 'noticia-descricao';
+      p.textContent = item.descricao;
+
+      corpo.append(h3, p);
+      a.append(img, corpo);
+      return a;
+    }
+
+    function atualizarDistanciaCarrossel() {
+      if (!container.classList.contains('noticias-carrossel')) return;
+
+      const primeiroCardDuplicado = container.children[noticiasValidas.length];
+      if (!container.children.length || !primeiroCardDuplicado) return;
+
+      const primeiroCard = container.children[0];
+      const distancia = primeiroCardDuplicado.getBoundingClientRect().left - primeiroCard.getBoundingClientRect().left;
+      container.style.setProperty('--carrossel-distancia', `-${distancia}px`);
+      container.style.setProperty('--carrossel-duracao', `${Math.max(12, distancia / 55)}s`);
+    }
+
+    /* 1 & 2. Renderização */
+    function renderizar() {
+      // 0 notícias válidas: esconde o carrossel e mostra a imagem fallback
+      if (noticiasValidas.length === 0) {
+        secaoNoticias.hidden = true;
+        fallbackHumberto.hidden = false;
+        fallbackHumberto.removeAttribute('aria-hidden');
+        modoAtual = null;
+        return;
+      }
+
+      // Notícias válidas existem: esconde fallback e exibe seção
+      fallbackHumberto.hidden = true;
+      fallbackHumberto.setAttribute('aria-hidden', 'true');
+      secaoNoticias.hidden = false;
+
+      const capacidade = calcularCapacidadeVisivel();
+      const novoModo = noticiasValidas.length > capacidade ? 'carrossel' : 'estatico';
+
+      if (novoModo === modoAtual && container.children.length > 0) {
+        atualizarDistanciaCarrossel();
+        return;
+      }
+      modoAtual = novoModo;
+
+      // Limpa cards antigos para evitar duplicidade ao redimensionar ou voltar de página
+      container.replaceChildren();
+
+      if (novoModo === 'carrossel') {
+        container.className = 'noticias-container noticias-carrossel';
+        // Duplica para rotação contínua 360° sem salto
+        [...noticiasValidas, ...noticiasValidas].forEach(n => container.appendChild(criarCard(n)));
+      } else {
+        container.className = 'noticias-container noticias-estaticas';
+        noticiasValidas.forEach(n => container.appendChild(criarCard(n)));
+      }
+
+      atualizarDistanciaCarrossel();
+    }
+
+    async function iniciar() {
+      try {
+        const dados = await obterNoticias();
+        noticiasValidas = filtrarValidas(dados);
+      } catch (err) {
+        console.error('Erro ao buscar notícias:', err);
+        noticiasValidas = [];
+      }
+      renderizar();
+    }
+
+    // Mede a área que realmente contém os cards, incluindo mudanças de layout.
+    new ResizeObserver(() => {
+      if (noticiasValidas.length > 0) renderizar();
+    }).observe(secaoNoticias);
+
+    // Revalida notícias expiradas ao restaurar a página pelo BFCache.
+    window.addEventListener('pageshow', (evento) => {
+      if (evento.persisted) {
+        modoAtual = null;
+        iniciar();
+      }
+    });
+
+    iniciar();
   </script>
 </body>
 </html>

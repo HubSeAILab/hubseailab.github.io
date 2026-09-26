@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>HUB-SE | Contato</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="contato.css">
+  <link rel="stylesheet" href="../components/layout.css">
+</head>
+<body>
+
+  <!-- Navbar Global Unificada -->
+  <div id="site-navbar" data-pagina="contato"></div>
+
+  <main class="contato-main">
+    <div class="contato-card">
+      <h1 class="contato-titulo">Entre em contato!</h1>
+
+      <form id="form-contato" action="mailto:hubse.ailab@gmail.com" method="post" enctype="text/plain">
+        <div class="campo">
+          <label for="nome">Nome</label>
+          <input id="nome" name="nome" type="text" maxlength="100" required placeholder="Seu nome completo">
+        </div>
+
+        <div class="campo">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" maxlength="255" required placeholder="seuemail@exemplo.com">
+        </div>
+
+        <div class="campo">
+          <label for="mensagem">Mensagem</label>
+          <textarea id="mensagem" name="mensagem" rows="5" maxlength="1500" required placeholder="Como podemos te ajudar?"></textarea>
+        </div>
+
+        <button type="submit" class="btn-enviar">Enviar</button>
+        <p id="feedback" class="feedback" hidden></p>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer Global Unificado -->
+  <div id="site-footer"></div>
+
+  <script src="../components/layout.js"></script>
+  <script>
+    const form = document.getElementById('form-contato');
+    const feedback = document.getElementById('feedback');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const nome = form.nome.value.trim();
+      const email = form.email.value.trim();
+      const msg = form.mensagem.value.trim();
+
+      const assunto = `[Contato HUB-SE] Mensagem de ${nome}`;
+      const corpo = `Nome: ${nome}\nEmail: ${email}\n\nMensagem:\n${msg}`;
+
+      window.location.href = `mailto:hubse.ailab@gmail.com?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+
+      feedback.hidden = false;
+      feedback.textContent = 'Abrindo seu aplicativo de e-mail...';
+    });
+  </script>
+</body>
+</html>

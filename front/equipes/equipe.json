@@ -38,6 +38,13 @@
     "LINKEDIN": "https://www.linkedin.com/in/gustavo-lopes-oliveira/",
     "GITHUB": "https://github.com/GustavoLopesOliveira",
     "URL_FOTO": "../assets/fotos/Gustavo.JPG"
+
+    "NOME": "Igor",
+    "SOBRENOME": "Barbosa",
+    "PROJETO": "Projeto X",
+    "LINKEDIN": "https://linkedin.com/in/igor-barbosa",
+    "GITHUB": "https://github.com/igorbarbosa",
+    "URL_FOTO": "https://i.pravatar.cc/300?img=15"
   },
   {
     "NOME": "Hayala",
@@ -102,5 +109,36 @@
     "LINKEDIN": "https://www.linkedin.com/in/matheus-silva-coxir/",
     "GITHUB": "https://github.com/MatheusSCxr",
     "URL_FOTO": "../assets/fotos/Tiago.JPG"
+
+    "NOME": "Igor",
+    "SOBRENOME": "Barbosa",
+    "PROJETO": "Projeto Y",
+    "LINKEDIN": "https://linkedin.com/in/igor-barbosa",
+    "GITHUB": "https://github.com/igorbarbosa",
+    "URL_FOTO": "https://i.pravatar.cc/300?img=15"
+  },
+  {
+    "NOME": "Igor",
+    "SOBRENOME": "Barbosa",
+    "PROJETO": "Projeto Z",
+    "LINKEDIN": "https://linkedin.com/in/igor-barbosa",
+    "GITHUB": "https://github.com/igorbarbosa",
+    "URL_FOTO": "https://i.pravatar.cc/300?img=15"
+  },
+  {
+    "NOME": "Igor",
+    "SOBRENOME": "Barbosa",
+    "PROJETO": "PZ",
+    "LINKEDIN": "https://linkedin.com/in/igor-barbosa",
+    "GITHUB": "https://github.com/igorbarbosa",
+    "URL_FOTO": "https://i.pravatar.cc/300?img=15"
+  },
+  {
+    "NOME": "Igor",
+    "SOBRENOME": "Barbosa",
+    "PROJETO": "PZZ",
+    "LINKEDIN": "https://linkedin.com/in/igor-barbosa",
+    "GITHUB": "https://github.com/igorbarbosa",
+    "URL_FOTO": "https://i.pravatar.cc/300?img=15"
   }
 ]

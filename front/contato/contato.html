@@ -19,15 +19,20 @@
         Entre em contato!
       </h1>
 
+      <!-- 
+      =============================================================================
+                                     ATENÇÃO AQUI! 
+      SUBSTITUA O LINK DA PROPRIEDADE "action" PELO ENDPOINT DO SEU PROFESSOR.
+      Exemplo: mude "https://formspree.io/f/xqparzjy" pelo link que ele criar.
+      =============================================================================
+      -->
       <form
         id="form-contato"
-        action="mailto:hubse.ailab@gmail.com"
+        action="https://formspree.io/f/xqparzjy"
         method="post"
-        enctype="text/plain"
       >
         <div class="campo">
           <label for="nome">Nome</label>
-
           <input
             id="nome"
             name="nome"
@@ -40,7 +45,6 @@
 
         <div class="campo">
           <label for="email">Email</label>
-
           <input
             id="email"
             name="email"
@@ -53,7 +57,6 @@
 
         <div class="campo">
           <label for="mensagem">Mensagem</label>
-
           <textarea
             id="mensagem"
             name="mensagem"
@@ -68,7 +71,18 @@
           Enviar
         </button>
 
+        <!-- Feedback normal (sucesso ou carregando) -->
         <p id="feedback" class="feedback" hidden></p>
+
+        <!-- Container do Plano B (Aparece apenas se o envio der errado) -->
+        <div id="fallback-container" hidden style="margin-top: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;">
+          <p style="font-size: 14px; color: #ffcccc; margin-bottom: 12px; line-height: 1.4;">
+            Ops! Tivemos um problema de conexão. Por favor, clique no botão abaixo para enviar sua mensagem usando seu aplicativo de e-mail:
+          </p>
+          <button type="button" id="btn-fallback" class="btn-enviar" style="width: 100%; max-width: 260px; font-size: 14px;">
+            Abrir App de E-mail
+          </button>
+        </div>
       </form>
     </div>
   </main>
@@ -81,35 +95,80 @@
   <script>
     const form = document.getElementById('form-contato');
     const feedback = document.getElementById('feedback');
+    const fallbackContainer = document.getElementById('fallback-container');
+    const btnFallback = document.getElementById('btn-fallback');
 
-    form.addEventListener('submit', event => {
+    /* 
+    =============================================================================
+                                   ATENÇÃO AQUI! 
+    COLOQUE O E-MAIL DO SEU PROFESSOR NA VARIÁVEL ABAIXO.
+    Esse e-mail será usado se o Formspree falhar e o usuário clicar no botão 
+    de emergência para abrir o Outlook/Gmail/Apple Mail.
+    =============================================================================
+    */
+    const EMAIL_DESTINO_FALLBACK = "hubse.ailab@gmail.com";
+
+    form.addEventListener('submit', async (event) => {
+      // Impede que a página recarregue ao clicar em enviar
       event.preventDefault();
 
+      // Valida se os campos obrigatórios foram preenchidos
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
       }
 
+      // Prepara a tela para mostrar que está enviando
+      feedback.hidden = false;
+      fallbackContainer.hidden = true; // Garante que o plano B esteja escondido
+      feedback.textContent = 'Enviando mensagem...';
+
+      const formData = new FormData(form);
+
+      try {
+        // Envia os dados silenciosamente para a URL do Formspree
+        const response = await fetch(form.action, {
+          method: form.method,
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        // Se a resposta for um Sucesso (Status 200 OK)
+        if (response.ok) {
+          feedback.textContent = 'Mensagem enviada com sucesso! Em breve entraremos em contato.';
+          form.reset(); 
+        } else {
+          // Se o Formspree retornar um erro (ex: e-mail não confirmado ou erro na conta)
+          mostrarPlanoB();
+        }
+      } catch (error) {
+        // Se houver erro de internet ou a pessoa estiver offline
+        mostrarPlanoB();
+      }
+    });
+
+    function mostrarPlanoB() {
+      feedback.hidden = true; // Esconde o texto "Enviando mensagem..."
+      fallbackContainer.hidden = false; // Mostra a caixinha do Plano B
+    }
+
+    btnFallback.addEventListener('click', () => {
       const nome = form.nome.value.trim();
       const email = form.email.value.trim();
       const msg = form.mensagem.value.trim();
 
-      const assunto =
-        `[Contato HUB-SE] Mensagem de ${nome}`;
+      const assunto = `[Contato HUB-SE] Mensagem de ${nome}`;
+      const corpo = `Nome: ${nome}\nEmail: ${email}\n\nMensagem:\n${msg}`;
 
-      const corpo =
-        `Nome: ${nome}\n` +
-        `Email: ${email}\n\n` +
-        `Mensagem:\n${msg}`;
+      // Usa a variável EMAIL_DESTINO_FALLBACK definida lá em cima
+      window.location.href = `mailto:${EMAIL_DESTINO_FALLBACK}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
 
-      window.location.href =
-        `mailto:hubse.ailab@gmail.com` +
-        `?subject=${encodeURIComponent(assunto)}` +
-        `&body=${encodeURIComponent(corpo)}`;
-
+      // Atualiza os textos da tela para o usuário saber que o app está abrindo
+      fallbackContainer.hidden = true;
       feedback.hidden = false;
-      feedback.textContent =
-        'Abrindo seu aplicativo de e-mail...';
+      feedback.textContent = 'Abrindo seu aplicativo de e-mail...';
     });
   </script>
 </body>
